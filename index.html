@@ -6,24 +6,34 @@
 <title>ExCチームの闘い方</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg-deep: #0a0e27;
-  --accent-cyan: #64c8ff;
+  --bg-deep: #080c24;
+  --bg-mid: #0c1233;
+  --accent-cyan: #5ec4ff;
   --accent-teal: #00d4aa;
   --accent-purple: #a78bfa;
   --accent-rose: #f472b6;
-  --text-primary: #e8ecf4;
-  --text-muted: rgba(232, 236, 244, 0.55);
-  --glass-bg: rgba(255, 255, 255, 0.04);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --accent-amber: #fbbf24;
+  --text-primary: #edf0f7;
+  --text-secondary: rgba(237, 240, 247, 0.82);
+  --text-muted: rgba(237, 240, 247, 0.48);
+  --glass-bg: rgba(255, 255, 255, 0.045);
+  --glass-bg-strong: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255,255,255,0.05) inset;
+  --clay-shadow-light: 8px 8px 20px rgba(0,0,0,0.4), -4px -4px 12px rgba(255,255,255,0.03), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  --clay-shadow-cyan: 0 8px 32px rgba(94,196,255,0.12), 0 0 0 1px rgba(94,196,255,0.08) inset;
+  --clay-shadow-teal: 0 8px 32px rgba(0,212,170,0.12), 0 0 0 1px rgba(0,212,170,0.08) inset;
+  --clay-shadow-purple: 0 8px 32px rgba(167,139,250,0.12), 0 0 0 1px rgba(167,139,250,0.08) inset;
 }
 
 html, body {
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: 'Noto Sans JP', 'Inter', sans-serif;
   background: var(--bg-deep);
   color: var(--text-primary);
   overflow: hidden;
@@ -36,6 +46,19 @@ html, body {
   width: 100%; height: 100%;
   z-index: 0;
   pointer-events: none;
+}
+
+/* Ambient gradient overlay */
+#ambient {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 80%, rgba(94,196,255,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(167,139,250,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 50% 50%, rgba(0,212,170,0.03) 0%, transparent 70%);
 }
 
 #scroll-container {
@@ -63,35 +86,41 @@ html, body {
 /* ===== Dot Navigation ===== */
 #page-nav {
   position: fixed;
-  right: 28px;
+  right: 30px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 100;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 12px 8px;
 }
-.nav-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
-.nav-group:last-child { margin-bottom: 0; }
-.nav-separator { width: 10px; height: 1px; background: rgba(255,255,255,0.12); margin: 2px auto; }
+.nav-group { display: flex; flex-direction: column; gap: 6px; }
+.nav-separator { width: 14px; height: 1px; background: rgba(255,255,255,0.08); margin: 4px auto; }
 #page-nav button {
   width: 8px; height: 8px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.18);
   background: transparent;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0;
 }
 #page-nav button.active {
   background: var(--accent-cyan);
   border-color: var(--accent-cyan);
-  box-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
-  transform: scale(1.4);
+  box-shadow: 0 0 12px rgba(94, 196, 255, 0.6);
+  transform: scale(1.5);
 }
 #page-nav button:hover:not(.active) {
   border-color: rgba(255,255,255,0.5);
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.2);
 }
 
 /* ===== Page Counter ===== */
@@ -100,279 +129,373 @@ html, body {
   bottom: 28px;
   right: 32px;
   z-index: 100;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 300;
   color: var(--text-muted);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
+  font-family: 'Inter', sans-serif;
 }
-#page-counter .current { color: var(--accent-cyan); font-weight: 700; font-size: 0.9rem; }
+#page-counter .current {
+  color: var(--accent-cyan);
+  font-weight: 700;
+  font-size: 1rem;
+}
 
-/* ===== Glass Card ===== */
+/* ===== Glass Card — Enhanced Glassmorphism ===== */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 52px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: 28px;
+  padding: 56px;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.5s, border-color 0.5s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+}
+.glass-card:hover {
+  border-color: rgba(255,255,255,0.22);
+  box-shadow: var(--glass-shadow), 0 0 60px rgba(94,196,255,0.04);
+  transform: translateY(-2px);
 }
 
 /* ===== Reveal Animations ===== */
 .reveal {
   opacity: 0; transform: translateY(50px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal.active { opacity: 1; transform: translateY(0); }
-
 .reveal-left {
-  opacity: 0; transform: translateX(-70px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0; transform: translateX(-80px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal-left.active { opacity: 1; transform: translateX(0); }
-
 .reveal-right {
-  opacity: 0; transform: translateX(70px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0; transform: translateX(80px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal-right.active { opacity: 1; transform: translateX(0); }
-
 .reveal-scale {
-  opacity: 0; transform: scale(0.85);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0; transform: scale(0.88);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .reveal-scale.active { opacity: 1; transform: scale(1); }
 
 /* ===== Section Title Pages ===== */
 .section-title-page {
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   text-align: center;
 }
 .section-title-page .section-number {
-  font-size: clamp(3rem, 6vw, 7rem);
+  font-size: clamp(4rem, 8vw, 9rem);
   font-weight: 900;
   line-height: 1;
-  -webkit-text-stroke: 1.5px rgba(255,255,255,0.12);
-  color: transparent;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .section-title-page h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
   font-weight: 900;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 .section-title-page .section-en {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 300;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.3em;
   color: var(--text-muted);
   text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+/* Decorative line under section titles */
+.section-title-page .line-deco {
+  width: 60px;
+  height: 2px;
+  margin: 0 auto;
+  border-radius: 1px;
 }
 
 /* ===== Cover ===== */
-#cover { flex-direction: column; gap: 24px; text-align: center; }
+#cover { flex-direction: column; gap: 28px; text-align: center; }
 #cover .title-line {
-  font-size: clamp(2.8rem, 5.5vw, 5.5rem);
+  font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 900;
   letter-spacing: 0.08em;
   line-height: 1.3;
+  text-shadow: 0 0 80px rgba(94,196,255,0.15);
 }
 #cover .title-line .char {
   display: inline-block;
-  opacity: 0; transform: translateY(40px);
-  animation: charIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0; transform: translateY(50px) scale(0.9);
+  animation: charIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
-@keyframes charIn { to { opacity: 1; transform: translateY(0); } }
+@keyframes charIn { to { opacity: 1; transform: translateY(0) scale(1); } }
 #cover .subtitle {
-  font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+  font-size: clamp(1rem, 1.6vw, 1.4rem);
   font-weight: 300;
   color: var(--text-muted);
+  letter-spacing: 0.15em;
+  font-family: 'Inter', sans-serif;
   opacity: 0;
-  animation: fadeIn 1.2s 1.5s ease forwards;
+  animation: fadeSlideUp 1.2s 1.6s ease forwards;
 }
+@keyframes fadeSlideUp { to { opacity: 1; transform: translateY(0); } from { transform: translateY(16px); } }
 @keyframes fadeIn { to { opacity: 1; } }
 #cover .scroll-hint {
   position: absolute;
-  bottom: 40px; left: 50%;
+  bottom: 44px; left: 50%;
   transform: translateX(-50%);
   opacity: 0;
-  animation: fadeIn 1s 2.2s ease forwards;
+  animation: fadeIn 1s 2.4s ease forwards;
 }
 .chevron {
-  width: 28px; height: 28px;
+  width: 24px; height: 24px;
   border-right: 2px solid var(--accent-cyan);
   border-bottom: 2px solid var(--accent-cyan);
   transform: rotate(45deg);
-  animation: pulse 2s infinite ease-in-out;
+  animation: pulse 2.5s infinite ease-in-out;
 }
 @keyframes pulse {
-  0%, 100% { opacity: 0.3; transform: rotate(45deg) translateY(0); }
-  50% { opacity: 1; transform: rotate(45deg) translateY(8px); }
+  0%, 100% { opacity: 0.2; transform: rotate(45deg) translateY(0); }
+  50% { opacity: 0.8; transform: rotate(45deg) translateY(10px); }
 }
 .cover-decoration {
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(100, 200, 255, 0.06);
-  animation: ringPulse 6s infinite ease-in-out;
+  border: 1px solid rgba(94, 196, 255, 0.05);
+  animation: ringPulse 7s infinite ease-in-out;
 }
-.cover-decoration:nth-child(1) { width: 500px; height: 500px; }
-.cover-decoration:nth-child(2) { width: 700px; height: 700px; animation-delay: 1.5s; }
-.cover-decoration:nth-child(3) { width: 900px; height: 900px; animation-delay: 3s; }
+.cover-decoration:nth-child(1) { width: 450px; height: 450px; }
+.cover-decoration:nth-child(2) { width: 680px; height: 680px; animation-delay: 2s; }
+.cover-decoration:nth-child(3) { width: 920px; height: 920px; animation-delay: 4s; }
 @keyframes ringPulse {
-  0%, 100% { opacity: 0; transform: scale(0.9); }
+  0%, 100% { opacity: 0; transform: scale(0.92); }
   50% { opacity: 1; transform: scale(1); }
+}
+/* Cover glass badge */
+#cover .badge {
+  display: inline-block;
+  padding: 10px 28px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: fadeSlideUp 1s 2s ease forwards;
 }
 
 /* ===== Detail Pages ===== */
-.detail-page { flex-direction: column; gap: 20px; max-width: 900px; margin: 0 auto; }
+.detail-page { flex-direction: column; gap: 24px; max-width: 960px; margin: 0 auto; }
 .detail-page .page-label {
-  font-size: 0.8rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
 }
 .detail-page h3 {
-  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
   font-weight: 900;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .detail-page .detail-card {
-  max-width: 800px;
+  max-width: 860px;
   width: 100%;
 }
 .detail-page p {
-  font-size: 1rem;
-  line-height: 2;
-  font-weight: 300;
-  color: rgba(232, 236, 244, 0.75);
+  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+  line-height: 2.1;
+  font-weight: 400;
+  color: var(--text-secondary);
 }
 .detail-page .highlight {
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
 }
 .detail-page .em-cyan { color: var(--accent-cyan); font-weight: 700; }
 .detail-page .em-teal { color: var(--accent-teal); font-weight: 700; }
 .detail-page .em-purple { color: var(--accent-purple); font-weight: 700; }
 
-/* Accent bar on detail cards */
+/* Accent bar */
 .accent-bar {
-  width: 48px; height: 3px;
+  width: 56px; height: 3px;
   border-radius: 2px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-/* ===== Operations Flow ===== */
+/* ===== Operations Flow — Claymorphism ===== */
 .ops-flow {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  margin-top: 32px;
+  gap: 16px;
+  margin-top: 36px;
   flex-wrap: wrap;
 }
 .ops-flow-item {
-  padding: 18px 30px;
-  border-radius: 16px;
-  font-size: 0.9rem;
+  padding: 22px 32px;
+  border-radius: 20px;
+  font-size: 1rem;
   font-weight: 700;
   text-align: center;
-  min-width: 170px;
+  min-width: 180px;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
-.ops-flow-item.a { background: rgba(0, 212, 170, 0.1); border: 1px solid rgba(0, 212, 170, 0.2); color: var(--accent-teal); }
-.ops-flow-item.b { background: rgba(100, 200, 255, 0.1); border: 1px solid rgba(100, 200, 255, 0.2); color: var(--accent-cyan); }
-.ops-flow-item.c { background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2); color: var(--accent-purple); }
-.ops-arrow { color: var(--text-muted); font-size: 1.4rem; }
+.ops-flow-item:hover { transform: translateY(-3px); }
+.ops-flow-item.a {
+  background: linear-gradient(135deg, rgba(0,212,170,0.12), rgba(0,212,170,0.06));
+  border: 1px solid rgba(0,212,170,0.18);
+  color: var(--accent-teal);
+  box-shadow: var(--clay-shadow-teal);
+}
+.ops-flow-item.b {
+  background: linear-gradient(135deg, rgba(94,196,255,0.12), rgba(94,196,255,0.06));
+  border: 1px solid rgba(94,196,255,0.18);
+  color: var(--accent-cyan);
+  box-shadow: var(--clay-shadow-cyan);
+}
+.ops-flow-item.c {
+  background: linear-gradient(135deg, rgba(167,139,250,0.12), rgba(167,139,250,0.06));
+  border: 1px solid rgba(167,139,250,0.18);
+  color: var(--accent-purple);
+  box-shadow: var(--clay-shadow-purple);
+}
+.ops-arrow {
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  font-family: 'Inter', sans-serif;
+}
 
 /* ===== Work Detail Items ===== */
-.work-detail-list { list-style: none; margin-top: 20px; }
+.work-detail-list { list-style: none; margin-top: 24px; }
 .work-detail-list li {
-  padding: 10px 0 10px 24px;
+  padding: 12px 0 12px 28px;
   position: relative;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  font-weight: 300;
-  color: rgba(232, 236, 244, 0.7);
+  font-size: clamp(1rem, 1.2vw, 1.1rem);
+  line-height: 1.9;
+  font-weight: 400;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
+.work-detail-list li:last-child { border-bottom: none; }
 .work-detail-list li::before {
   content: '';
   position: absolute;
-  left: 0; top: 18px;
+  left: 0; top: 20px;
   width: 8px; height: 8px;
   border-radius: 50%;
 }
 .work-detail-list.purple li::before {
   background: var(--accent-purple);
-  box-shadow: 0 0 10px rgba(167, 139, 250, 0.4);
+  box-shadow: 0 0 12px rgba(167, 139, 250, 0.5);
 }
 .work-detail-list.cyan li::before {
   background: var(--accent-cyan);
-  box-shadow: 0 0 10px rgba(100, 200, 255, 0.4);
+  box-shadow: 0 0 12px rgba(94, 196, 255, 0.5);
 }
 
 /* ===== Skill Page ===== */
 .skill-meter {
-  margin-top: 24px;
+  margin-top: 28px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 .skill-bar-wrap {
   flex: 1;
-  height: 4px;
+  height: 5px;
   background: rgba(255,255,255,0.06);
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
 }
 .skill-bar {
   height: 100%;
-  border-radius: 2px;
+  border-radius: 3px;
   width: 0;
-  transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .skill-bar.filled { width: 100%; }
 .skill-tag {
-  font-size: 0.75rem;
-  font-weight: 300;
+  font-size: 0.82rem;
+  font-weight: 400;
   color: var(--text-muted);
   letter-spacing: 0.08em;
   white-space: nowrap;
+  font-family: 'Inter', sans-serif;
 }
 
-/* ===== Attitude Quote ===== */
+/* ===== Attitude Quote — Enhanced ===== */
 .attitude-quote {
-  margin-top: 28px;
-  padding: 24px 28px;
+  margin-top: 32px;
+  padding: 28px 32px;
   border-left: 3px solid;
-  border-radius: 0 16px 16px 0;
-  background: rgba(255,255,255,0.02);
-  font-size: 0.92rem;
-  line-height: 1.9;
-  font-weight: 300;
+  border-radius: 0 20px 20px 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  backdrop-filter: blur(12px);
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 2;
+  font-weight: 400;
   font-style: italic;
-  color: rgba(232, 236, 244, 0.55);
+  color: rgba(237, 240, 247, 0.6);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  position: relative;
+}
+.attitude-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: 12px; left: 16px;
+  font-size: 2.5rem;
+  font-style: normal;
+  color: rgba(255,255,255,0.06);
+  font-family: serif;
+  line-height: 1;
 }
 .attitude-quote .author {
   display: block;
-  margin-top: 12px;
+  margin-top: 14px;
   font-style: normal;
-  font-weight: 400;
-  color: rgba(232, 236, 244, 0.3);
-  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(237, 240, 247, 0.3);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
 }
+
+/* ===== Section-specific card accents ===== */
+.card-accent-cyan { box-shadow: var(--glass-shadow), 0 0 60px rgba(94,196,255,0.05); }
+.card-accent-teal { box-shadow: var(--glass-shadow), 0 0 60px rgba(0,212,170,0.05); }
+.card-accent-purple { box-shadow: var(--glass-shadow), 0 0 60px rgba(167,139,250,0.05); }
 
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
   .page { padding: 40px 24px; }
-  #page-nav { right: 10px; }
+  #page-nav { right: 8px; padding: 8px 6px; }
   .ops-flow { flex-direction: column; }
   .ops-arrow { transform: rotate(90deg); }
+  .glass-card { padding: 36px 28px; }
 }
 </style>
 </head>
 <body>
 
 <canvas id="bubble-canvas"></canvas>
+<div id="ambient"></div>
 <nav id="page-nav"></nav>
-<div id="page-counter"><span class="current">1</span> / <span class="total">16</span></div>
+<div id="page-counter"><span class="current">1</span> / <span class="total">17</span></div>
 
 <main id="scroll-container">
 
@@ -381,6 +504,7 @@ html, body {
     <div class="cover-decoration"></div>
     <div class="cover-decoration"></div>
     <div class="cover-decoration"></div>
+    <div class="badge">ExC Team Playbook</div>
     <div class="title-line" id="main-title"></div>
     <div class="subtitle">How We Fight — Our Strategy, Our Standards</div>
     <div class="scroll-hint"><div class="chevron"></div></div>
@@ -391,6 +515,7 @@ html, body {
     <div class="section-number reveal">01</div>
     <h2 class="reveal" style="transition-delay:0.1s;background:linear-gradient(135deg,var(--accent-cyan),var(--accent-teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">チームパーパス</h2>
     <div class="section-en reveal" style="transition-delay:0.2s">Team Purpose</div>
+    <div class="line-deco reveal" style="transition-delay:0.3s;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-teal))"></div>
   </section>
 
   <!-- 2: Purpose - Mission -->
@@ -398,9 +523,9 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-cyan)">TEAM PURPOSE</div>
     <div class="accent-bar reveal" style="background:var(--accent-cyan);transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">Mission</h3>
-    <div class="glass-card detail-card reveal-scale" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-cyan reveal-scale" style="transition-delay:0.2s">
       <p>実現可能な範囲で、クライアントに対して<span class="em-cyan">最大の価値</span>を生み出す。</p>
-      <p style="margin-top:16px">我々に費用を投じていただくことで、直接的・間接的に<span class="em-cyan">コストを超える利益</span>へと繋げる。</p>
+      <p style="margin-top:20px">我々に費用を投じていただくことで、直接的・間接的に<span class="em-cyan">コストを超える利益</span>へと繋げる。</p>
     </div>
   </section>
 
@@ -409,9 +534,9 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-teal)">TEAM PURPOSE</div>
     <div class="accent-bar reveal" style="background:var(--accent-teal);transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">Working Style</h3>
-    <div class="glass-card detail-card reveal-scale" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-teal reveal-scale" style="transition-delay:0.2s">
       <p>クライアントと<span class="em-teal">同じ目線</span>、クライアント<span class="em-teal">以上の熱量</span>を持つ。</p>
-      <p style="margin-top:16px">LTV（顧客生涯価値）で捉え、短期ではなく<span class="em-teal">中長期で価値</span>を創出する。</p>
+      <p style="margin-top:20px">LTV（顧客生涯価値）で捉え、短期ではなく<span class="em-teal">中長期で価値</span>を創出する。</p>
     </div>
   </section>
 
@@ -420,6 +545,7 @@ html, body {
     <div class="section-number reveal">02</div>
     <h2 class="reveal" style="transition-delay:0.1s;background:linear-gradient(135deg,var(--accent-teal),var(--accent-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">業務</h2>
     <div class="section-en reveal" style="transition-delay:0.2s">Operations</div>
+    <div class="line-deco reveal" style="transition-delay:0.3s;background:linear-gradient(90deg,var(--accent-teal),var(--accent-cyan))"></div>
   </section>
 
   <!-- 5: Operations - Detail -->
@@ -433,9 +559,9 @@ html, body {
     </div>
     <div class="ops-flow">
       <div class="ops-flow-item a reveal" style="transition-delay:0.35s">効率的な<br>案件対応</div>
-      <div class="ops-arrow reveal" style="transition-delay:0.45s">→</div>
+      <div class="ops-arrow reveal" style="transition-delay:0.45s">&rarr;</div>
       <div class="ops-flow-item b reveal" style="transition-delay:0.5s">インバウンド<br>稼働削減</div>
-      <div class="ops-arrow reveal" style="transition-delay:0.6s">→</div>
+      <div class="ops-arrow reveal" style="transition-delay:0.6s">&rarr;</div>
       <div class="ops-flow-item c reveal" style="transition-delay:0.65s">新規営業への<br>リソース集中</div>
     </div>
   </section>
@@ -445,6 +571,7 @@ html, body {
     <div class="section-number reveal">03</div>
     <h2 class="reveal" style="transition-delay:0.1s;background:linear-gradient(135deg,var(--accent-purple),var(--accent-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">作業</h2>
     <div class="section-en reveal" style="transition-delay:0.2s">Work Details</div>
+    <div class="line-deco reveal" style="transition-delay:0.3s;background:linear-gradient(90deg,var(--accent-purple),var(--accent-cyan))"></div>
   </section>
 
   <!-- 7: Work - 提案支援 -->
@@ -452,7 +579,7 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-purple)">WORK DETAILS</div>
     <div class="accent-bar reveal" style="background:var(--accent-purple);transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">提案支援</h3>
-    <div class="glass-card detail-card reveal-left" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-purple reveal-left" style="transition-delay:0.2s">
       <p>企業からの問い合わせや相談に対し、最適なソリューションを設計する。</p>
       <ul class="work-detail-list purple">
         <li class="reveal" style="transition-delay:0.35s">3,000以上の研修コンテンツから提案可能なものをマッチング</li>
@@ -468,7 +595,7 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-cyan)">WORK DETAILS</div>
     <div class="accent-bar reveal" style="background:var(--accent-cyan);transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">ツール設計・開発</h3>
-    <div class="glass-card detail-card reveal-right" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-cyan reveal-right" style="transition-delay:0.2s">
       <p>テクノロジーを活用し、提案精度と業務効率を最大化する。</p>
       <ul class="work-detail-list cyan">
         <li class="reveal" style="transition-delay:0.35s">生成AIを組み込んだ独自チャットボットの開発</li>
@@ -484,6 +611,7 @@ html, body {
     <div class="section-number reveal">04</div>
     <h2 class="reveal" style="transition-delay:0.1s;background:linear-gradient(135deg,var(--accent-cyan),var(--accent-teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">スキル</h2>
     <div class="section-en reveal" style="transition-delay:0.2s">Required Skills</div>
+    <div class="line-deco reveal" style="transition-delay:0.3s;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-teal))"></div>
   </section>
 
   <!-- 10: Skills - リサーチ能力 -->
@@ -491,9 +619,9 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-cyan)">SKILLS</div>
     <div class="accent-bar reveal" style="background:linear-gradient(90deg,var(--accent-cyan),var(--accent-teal));transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">リサーチ能力</h3>
-    <div class="glass-card detail-card reveal-scale" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-cyan reveal-scale" style="transition-delay:0.2s">
       <p>"何に悩み" "どのような姿になりたいのか" — 問い合わせの<span class="highlight">本質を見極め</span>なければ、提案精度は向上しない。</p>
-      <p style="margin-top:16px">企業課題や経営課題は範囲が広く、トレンドやマクロ経済にも左右されるため、<span class="em-cyan">"速く"</span> <span class="em-teal">"正確な"</span> 情報収集が不可欠。</p>
+      <p style="margin-top:20px">企業課題や経営課題は範囲が広く、トレンドやマクロ経済にも左右されるため、<span class="em-cyan">"速く"</span> <span class="em-teal">"正確な"</span> 情報収集が不可欠。</p>
       <div class="skill-meter">
         <div class="skill-bar-wrap"><div class="skill-bar" data-width="100%" style="background:linear-gradient(90deg,var(--accent-cyan),var(--accent-teal))"></div></div>
         <span class="skill-tag">Speed &times; Accuracy</span>
@@ -506,9 +634,9 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-purple)">SKILLS</div>
     <div class="accent-bar reveal" style="background:linear-gradient(90deg,var(--accent-purple),var(--accent-cyan));transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">ロジカルシンキング</h3>
-    <div class="glass-card detail-card reveal-scale" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-purple reveal-scale" style="transition-delay:0.2s">
       <p>リサーチした情報を <span class="em-purple">"相関"</span> <span class="em-cyan">"因果関係"</span> <span class="em-teal">"事実"</span> <span class="highlight">"仮説"</span> <span class="highlight">"主張"</span> に分解して構造的に理解する。</p>
-      <p style="margin-top:16px">クライアント・顧客双方に対して、必要に応じて<span class="highlight">最適な提案</span>が可能になる。</p>
+      <p style="margin-top:20px">クライアント・顧客双方に対して、必要に応じて<span class="highlight">最適な提案</span>が可能になる。</p>
       <div class="skill-meter">
         <div class="skill-bar-wrap"><div class="skill-bar" data-width="100%" style="background:linear-gradient(90deg,var(--accent-purple),var(--accent-cyan))"></div></div>
         <span class="skill-tag">Deduction &middot; Induction &middot; Abduction</span>
@@ -521,9 +649,9 @@ html, body {
     <div class="page-label reveal" style="color:var(--accent-teal)">SKILLS</div>
     <div class="accent-bar reveal" style="background:linear-gradient(90deg,var(--accent-teal),var(--accent-purple));transition-delay:0.05s"></div>
     <h3 class="reveal" style="transition-delay:0.1s">ITリテラシー</h3>
-    <div class="glass-card detail-card reveal-scale" style="transition-delay:0.2s">
+    <div class="glass-card detail-card card-accent-teal reveal-scale" style="transition-delay:0.2s">
       <p>ツール設計や業務効率の最大化に向けて、積極的にITリテラシーを高める必要がある。</p>
-      <p style="margin-top:16px">テクノロジーを<span class="highlight">理解し活用する</span>ことが、チームの競争優位を生む。</p>
+      <p style="margin-top:20px">テクノロジーを<span class="highlight">理解し活用する</span>ことが、チームの競争優位を生む。</p>
       <div class="skill-meter">
         <div class="skill-bar-wrap"><div class="skill-bar" data-width="100%" style="background:linear-gradient(90deg,var(--accent-teal),var(--accent-purple))"></div></div>
         <span class="skill-tag">Technology &times; Productivity</span>
@@ -536,16 +664,17 @@ html, body {
     <div class="section-number reveal">05</div>
     <h2 class="reveal" style="transition-delay:0.1s;background:linear-gradient(135deg,var(--accent-purple),var(--accent-teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">姿勢</h2>
     <div class="section-en reveal" style="transition-delay:0.2s">Attitude</div>
+    <div class="line-deco reveal" style="transition-delay:0.3s;background:linear-gradient(90deg,var(--accent-purple),var(--accent-teal))"></div>
   </section>
 
   <!-- 14: Attitude - イシュードリブン -->
   <section class="page detail-page" data-index="14" data-group="5">
     <div class="page-label reveal" style="color:var(--accent-teal)">ATTITUDE</div>
     <div class="accent-bar reveal" style="background:var(--accent-teal);transition-delay:0.05s"></div>
-    <h3 class="reveal" style="transition-delay:0.1s">イシュードリブン<br><span style="font-size:0.5em;font-weight:300;color:var(--text-muted);letter-spacing:0.1em">Issue-Driven</span></h3>
-    <div class="glass-card detail-card reveal-left" style="transition-delay:0.2s">
+    <h3 class="reveal" style="transition-delay:0.1s">イシュードリブン<br><span style="font-size:0.45em;font-weight:300;color:var(--text-muted);letter-spacing:0.15em;font-family:'Inter',sans-serif">Issue-Driven</span></h3>
+    <div class="glass-card detail-card card-accent-teal reveal-left" style="transition-delay:0.2s">
       <p>闇雲に作業をして仕事をした気にならない。オーダーに応えれば良いと思わない。</p>
-      <p style="margin-top:16px">短期・中長期の課題や次のステップに進むためのポイント — <span class="em-teal">"イシュー"</span> を常に探し、<span class="highlight">打ち手を考え抜く</span>。</p>
+      <p style="margin-top:20px">短期・中長期の課題や次のステップに進むためのポイント — <span class="em-teal">"イシュー"</span> を常に探し、<span class="highlight">打ち手を考え抜く</span>。</p>
       <div class="attitude-quote" style="border-color:var(--accent-teal)">
         問いの質が、答えの質を決める。正しい問いを立てることが、すべての起点である。
         <span class="author">— Issue-Driven Principle</span>
@@ -557,10 +686,10 @@ html, body {
   <section class="page detail-page" data-index="15" data-group="5">
     <div class="page-label reveal" style="color:var(--accent-cyan)">ATTITUDE</div>
     <div class="accent-bar reveal" style="background:var(--accent-cyan);transition-delay:0.05s"></div>
-    <h3 class="reveal" style="transition-delay:0.1s">知的謙虚さ<br><span style="font-size:0.5em;font-weight:300;color:var(--text-muted);letter-spacing:0.1em">Intellectual Humility</span></h3>
-    <div class="glass-card detail-card reveal-right" style="transition-delay:0.2s">
+    <h3 class="reveal" style="transition-delay:0.1s">知的謙虚さ<br><span style="font-size:0.45em;font-weight:300;color:var(--text-muted);letter-spacing:0.15em;font-family:'Inter',sans-serif">Intellectual Humility</span></h3>
+    <div class="glass-card detail-card card-accent-cyan reveal-right" style="transition-delay:0.2s">
       <p>自身の知識やスキルを過信しない。自身の<span class="highlight">視界の外側</span>を想像し、ギャップをどのように埋めることができるか考える。</p>
-      <p style="margin-top:16px">現状、求められるスキルで他者より秀でていたとしても、全ての要素で勝ることはあり得ない。<span class="em-cyan">自身の物差しで全てを測れると考えない</span>。</p>
+      <p style="margin-top:20px">現状、求められるスキルで他者より秀でていたとしても、全ての要素で勝ることはあり得ない。<span class="em-cyan">自身の物差しで全てを測れると考えない</span>。</p>
       <div class="attitude-quote" style="border-color:var(--accent-cyan)">
         知っていると思い込む者は学ぶことをやめ、知らないと自覚する者は学び続ける。
         <span class="author">— Socratic Wisdom</span>
@@ -572,8 +701,8 @@ html, body {
   <section class="page detail-page" data-index="16" data-group="5">
     <div class="page-label reveal" style="color:var(--accent-purple)">ATTITUDE</div>
     <div class="accent-bar reveal" style="background:var(--accent-purple);transition-delay:0.05s"></div>
-    <h3 class="reveal" style="transition-delay:0.1s">ネガティブ・ケイパビリティ<br><span style="font-size:0.5em;font-weight:300;color:var(--text-muted);letter-spacing:0.1em">Negative Capability</span></h3>
-    <div class="glass-card detail-card reveal-scale" style="transition-delay:0.2s">
+    <h3 class="reveal" style="transition-delay:0.1s">ネガティブ・ケイパビリティ<br><span style="font-size:0.45em;font-weight:300;color:var(--text-muted);letter-spacing:0.15em;font-family:'Inter',sans-serif">Negative Capability</span></h3>
+    <div class="glass-card detail-card card-accent-purple reveal-scale" style="transition-delay:0.2s">
       <p>この世界に<span class="highlight">模範解答</span>なんてものは存在しない。不確実さの中に留まり、安易な答えに飛びつかない強さ。曖昧さを受け入れ、そこから深い洞察を紡ぎ出す力。</p>
       <div class="attitude-quote" style="border-color:var(--accent-purple)">
         「神は死んだ」— ニーチェ<br>
@@ -769,7 +898,7 @@ html, body {
       ctx.lineTo(x, y);
     }
     ctx.lineTo(W, 0); ctx.closePath();
-    ctx.fillStyle = 'rgba(100, 200, 255, 1)';
+    ctx.fillStyle = 'rgba(94, 196, 255, 1)';
     ctx.fill();
     ctx.globalAlpha = 0.03;
     ctx.beginPath();
@@ -802,7 +931,7 @@ html, body {
     const span = document.createElement('span');
     span.className = 'char';
     span.textContent = ch;
-    span.style.animationDelay = (0.4 + i * 0.08) + 's';
+    span.style.animationDelay = (0.5 + i * 0.09) + 's';
     el.appendChild(span);
   });
 })();
@@ -814,10 +943,8 @@ html, body {
   const container = document.getElementById('scroll-container');
   const counter = document.getElementById('page-counter');
   const totalPages = pages.length;
-
   counter.querySelector('.total').textContent = totalPages;
 
-  // Build grouped nav dots
   const groups = {};
   pages.forEach((p, i) => {
     const g = p.dataset.group;
@@ -832,9 +959,7 @@ html, body {
       const btn = document.createElement('button');
       btn.dataset.section = i;
       if (i === 0) btn.classList.add('active');
-      btn.addEventListener('click', () => {
-        pages[i].scrollIntoView({ behavior: 'smooth' });
-      });
+      btn.addEventListener('click', () => pages[i].scrollIntoView({ behavior: 'smooth' }));
       groupDiv.appendChild(btn);
     });
     nav.appendChild(groupDiv);
@@ -846,7 +971,7 @@ html, body {
   });
 
   function setActiveNav(idx) {
-    nav.querySelectorAll('button').forEach((btn) => {
+    nav.querySelectorAll('button').forEach(btn => {
       btn.classList.toggle('active', parseInt(btn.dataset.section) === idx);
     });
     counter.querySelector('.current').textContent = idx + 1;
@@ -860,13 +985,11 @@ html, body {
     if (activated.has(idx)) return;
     activated.add(idx);
     const reveals = section.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
-    reveals.forEach((el) => {
+    reveals.forEach(el => {
       const delay = parseFloat(el.style.transitionDelay || '0') * 1000;
       setTimeout(() => {
         el.classList.add('active');
-        el.querySelectorAll('.skill-bar').forEach(bar => {
-          setTimeout(() => bar.classList.add('filled'), 300);
-        });
+        el.querySelectorAll('.skill-bar').forEach(bar => setTimeout(() => bar.classList.add('filled'), 400));
       }, delay);
     });
   }
